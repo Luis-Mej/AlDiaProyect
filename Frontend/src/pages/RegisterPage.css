@@ -1,0 +1,47 @@
+/* ===========================
+   REGISTER PAGE STYLES
+   =========================== */
+
+.register-page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #16a34a, #059669, #a855f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-page::before {
+  content: '';
+  position: absolute;
+  top: -160px;
+  right: -160px;
+  width: 320px;
+  height: 320px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  mix-blend-mode: multiply;
+  filter: blur(3rem);
+  opacity: 0.2;
+}
+
+.register-page::after {
+  content: '';
+  position: absolute;
+  bottom: -160px;
+  left: -160px;
+  width: 320px;
+  height: 320px;
+  background-color: #a855f7;
+  border-radius: 50%;
+  mix-blend-mode: multiply;
+  filter: blur(3rem);
+  opacity: 0.2;
+}
+
+.register-page-content {
+  position: relative;
+  z-index: 10;
+}

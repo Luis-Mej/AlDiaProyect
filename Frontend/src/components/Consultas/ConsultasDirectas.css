@@ -1,0 +1,232 @@
+.consultas-directas {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Header */
+.consultas-header {
+  border-bottom: 2px solid rgb(229, 231, 235);
+  padding-bottom: 1rem;
+}
+
+.consultas-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  background: linear-gradient(to right, rgb(37, 99, 235), rgb(29, 78, 216));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.consultas-subtitle {
+  color: rgb(75, 85, 99);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Search Form */
+.consultas-form {
+  background: linear-gradient(135deg, rgb(240, 249, 255) 0%, rgb(225, 243, 255) 100%);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(147, 197, 253);
+}
+
+.consultas-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.consultas-form-select,
+.consultas-form-input {
+  border: 1px solid rgb(147, 197, 253);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.consultas-form-select:focus,
+.consultas-form-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(37, 99, 235);
+  border-color: rgb(37, 99, 235);
+}
+
+.consultas-form-button {
+  background: linear-gradient(to right, rgb(37, 99, 235), rgb(29, 78, 216));
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: box-shadow 0.3s ease;
+  border: none;
+}
+
+.consultas-form-button:hover:not(:disabled) {
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
+}
+
+.consultas-form-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.consultas-form-button-icon {
+  font-size: 1.125rem;
+}
+
+/* Error Message */
+.consultas-error {
+  padding: 1rem;
+  background-color: rgb(254, 242, 242);
+  border-left: 4px solid rgb(239, 68, 68);
+  color: rgb(185, 28, 28);
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.consultas-error-icon {
+  flex-shrink: 0;
+}
+
+/* Loading State */
+.consultas-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+}
+
+.consultas-loading-spinner {
+  text-align: center;
+}
+
+.consultas-spinner-circle {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid transparent;
+  border-bottom-color: rgb(37, 99, 235);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.consultas-loading-text {
+  color: rgb(75, 85, 99);
+}
+
+/* Results Container */
+.consultas-result-container {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid rgb(229, 231, 235);
+}
+
+/* Result Header */
+.result-header {
+  background: linear-gradient(to right, rgb(59, 130, 246), rgb(37, 99, 235));
+  color: white;
+  padding: 1.5rem;
+}
+
+.result-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.result-header-account {
+  color: rgb(191, 219, 254);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Result Body */
+.result-body {
+  padding: 1.5rem;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Result Field Cards */
+.result-field {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(229, 231, 235);
+  background-color: rgb(249, 250, 251);
+}
+
+.result-field-label {
+  color: rgb(75, 85, 99);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.result-field-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: rgb(31, 41, 55);
+}
+
+/* Specific Field Colors */
+.result-field.debt {
+  background-color: rgb(254, 242, 242);
+  border-color: rgb(254, 205, 211);
+}
+
+.result-field.debt .result-field-value {
+  color: rgb(220, 38, 38);
+}
+
+.result-field.warning {
+  background-color: rgb(255, 251, 235);
+  border-color: rgb(253, 224, 71);
+}
+
+.result-field.warning .result-field-value {
+  color: rgb(180, 83, 9);
+}
+
+.result-field.info {
+  background-color: rgb(240, 249, 255);
+  border-color: rgb(147, 197, 253);
+}
+
+.result-field.info .result-field-value {
+  color: rgb(37, 99, 235);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .consultas-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+}

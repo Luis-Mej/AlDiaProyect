@@ -1,0 +1,26 @@
+@import '../components/Auth/AuthForms.css';
+
+/* Página de autenticación reutiliza estilos de AuthForms */
+
+.auth-success {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #ecfdf5;
+  border-left: 4px solid #10b981;
+  color: #065f46;
+  border-radius: 0.375rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #2563eb;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 700;
+}
+
+.forgot-link {
+  text-align: right;
+  margin-top: 0.5rem;
+}

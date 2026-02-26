@@ -1,0 +1,259 @@
+.mis-servicios {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Header */
+.mis-servicios-header {
+  border-bottom: 2px solid rgb(229, 231, 235);
+  padding-bottom: 1rem;
+}
+
+.mis-servicios-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  background: linear-gradient(to right, rgb(37, 99, 235), rgb(29, 78, 216));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mis-servicios-subtitle {
+  color: rgb(75, 85, 99);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Error Message */
+.mis-servicios-error {
+  padding: 1rem;
+  background-color: rgb(254, 242, 242);
+  border-left: 4px solid rgb(239, 68, 68);
+  color: rgb(185, 28, 28);
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.mis-servicios-error-icon {
+  flex-shrink: 0;
+}
+
+/* Add Service Form */
+.mis-servicios-form {
+  background: linear-gradient(135deg, rgb(240, 249, 255) 0%, rgb(225, 243, 255) 100%);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(147, 197, 253);
+}
+
+.mis-servicios-form-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: rgb(31, 41, 55);
+  margin-bottom: 1rem;
+}
+
+.mis-servicios-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.mis-servicios-form-select,
+.mis-servicios-form-input {
+  border: 1px solid rgb(147, 197, 253);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.mis-servicios-form-select:focus,
+.mis-servicios-form-input:focus {
+  outline: none;
+  ring: 2px;
+  box-shadow: 0 0 0 2px rgb(37, 99, 235);
+  border-color: rgb(37, 99, 235);
+}
+
+.mis-servicios-form-button {
+  background: linear-gradient(to right, rgb(37, 99, 235), rgb(29, 78, 216));
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: box-shadow 0.3s ease;
+  border: none;
+}
+
+.mis-servicios-form-button:hover {
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
+}
+
+.mis-servicios-form-button-icon {
+  font-size: 1.125rem;
+}
+
+/* Loading State */
+.mis-servicios-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+}
+
+.mis-servicios-loading-spinner {
+  text-align: center;
+}
+
+.mis-servicios-spinner-circle {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid transparent;
+  border-bottom-color: rgb(37, 99, 235);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mis-servicios-loading-text {
+  color: rgb(75, 85, 99);
+}
+
+/* Empty State */
+.mis-servicios-empty {
+  text-align: center;
+  padding: 3rem 0;
+  background-color: rgb(249, 250, 251);
+  border-radius: 0.75rem;
+  border: 2px dashed rgb(209, 213, 219);
+}
+
+.mis-servicios-empty-title {
+  color: rgb(107, 114, 128);
+  font-size: 1.125rem;
+}
+
+.mis-servicios-empty-subtitle {
+  color: rgb(156, 163, 175);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Services Grid */
+.mis-servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Service Card */
+.service-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(243, 244, 246);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Header */
+.service-card-header {
+  background: linear-gradient(to right, rgb(59, 130, 246), rgb(37, 99, 235));
+  color: white;
+  padding: 1rem;
+}
+
+.service-card-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.service-card-title {
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.service-card-delete-btn {
+  background: none;
+  border: none;
+  color: rgb(254, 202, 202);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  opacity: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.service-card:hover .service-card-delete-btn {
+  opacity: 1;
+}
+
+.service-card-delete-btn:hover {
+  color: rgb(254, 167, 167);
+}
+
+.service-card-delete-icon {
+  font-size: 1.25rem;
+}
+
+/* Card Body */
+.service-card-body {
+  padding: 1rem;
+}
+
+.service-card-account {
+  font-size: 0.875rem;
+  color: rgb(75, 85, 99);
+  margin-bottom: 0.75rem;
+}
+
+.service-card-account-label {
+  font-weight: 600;
+  color: rgb(31, 41, 55);
+}
+
+.service-card-consulted {
+  font-size: 0.75rem;
+  color: rgb(107, 114, 128);
+  background-color: rgb(249, 250, 251);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.service-card-consulted-label {
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mis-servicios-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mis-servicios-grid {
+    grid-template-columns: 1fr;
+  }
+}
