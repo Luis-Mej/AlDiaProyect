@@ -37,14 +37,16 @@ export const Calendario = () => {
     setError('');
     try {
       const response = await recordatorioService.obtenerTodos();
+      console.log('Datos del backend:', response.data.data); // <-- AÑADE ESTE console.log
       const eventos = response.data.data.map((rec) => ({
         id: rec._id,
-        title: `${rec.servicio.toUpperCase()} - ${rec.cuenta}`,
-        start: new Date(rec.fechaRecordatorio),
-        end: new Date(rec.fechaPago),
+        title: `${rec.servicio.toUpperCase()} - ${rec.cuenta || 'Sin cuenta'}`, // Valor por defecto si es undefined
+        start: rec.fechaRecordatorio ? new Date(rec.fechaRecordatorio) : new Date(rec.fechaPago), // Formato de fecha válido
+        end: new Date(rec.fechaPago), // Formato de fecha válido
         resource: rec,
         tipo: 'recordatorio',
       }));
+      console.log('Recordatorios actualizados:', eventos); // <-- AÑADE ESTE console.log
       setRecordatorios(eventos);
     } catch (err) {
       setError(handleApiError(err));
@@ -84,7 +86,7 @@ export const Calendario = () => {
 
   const eventStyleGetter = (event) => {
     let backgroundColor = '#3b82f6';
-    
+
     if (event.resource?.estado === 'completado') {
       backgroundColor = '#10b981';
     } else if (event.resource?.estado === 'vencido') {
@@ -118,7 +120,7 @@ export const Calendario = () => {
 
     return (
       <div className="rbc-toolbar custom-toolbar">
-          <div className="rbc-toolbar-left">
+        <div className="rbc-toolbar-left">
           <button className="rbc-btn btn-volver" onClick={goToBack} aria-label="Ir al inicio" data-tooltip="Ir al inicio">
             <FiArrowLeft size={16} aria-hidden color="currentColor" />
             <span>Inicio</span>
@@ -192,7 +194,7 @@ export const Calendario = () => {
               noEventsInRange: 'No hay recordatorios en este rango',
               showMore: (count) => `+ ${count} más`,
             }}
-            views={[ 'month', 'week', 'day', 'agenda' ]}
+            views={['month', 'week', 'day', 'agenda']}
             components={{ toolbar: CustomToolbar }}
           />
         </div>

@@ -1,0 +1,35 @@
+.historial-container {
+  padding: 10px;
+}
+
+.historial-item {
+  margin-bottom: 12px;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.historial-item p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.historial-button {
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.historial-button:hover {
+  background: #45a049;
+}
+
+.no-gastos {
+  font-style: italic;
+  color: #666;
+}

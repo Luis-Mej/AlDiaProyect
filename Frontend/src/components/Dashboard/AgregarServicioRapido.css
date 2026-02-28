@@ -1,0 +1,79 @@
+.agregar-servicio-container {
+  padding: 12px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-width: 480px;
+  margin: 0 auto 16px;
+}
+
+.agregar-servicio-container h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.servicio-card {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.servicio-card:hover {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.2);
+}
+
+.servicio-card.seleccionado {
+  border-color: #007bff;
+  background: #e6f0ff;
+}
+
+.servicio-icono {
+  font-size: 1.8rem;
+  margin-bottom: 4px;
+}
+
+.servicio-promedio {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.agregar-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 0;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.agregar-btn:hover {
+  background: #218838;
+}
+
+.error {
+  margin-top: 8px;
+  color: #e53935;
+  font-size: 0.9rem;
+  text-align: center;
+}

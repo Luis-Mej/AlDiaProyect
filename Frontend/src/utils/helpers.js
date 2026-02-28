@@ -1,12 +1,12 @@
 // Función auxiliar para capturar errores
 export const handleApiError = (error) => {
   if (error.response) {
-    return error.response.data?.error || error.response.data?.mensaje || 'Error en la solicitud';
+    return error.response.data?.mensaje || 'Ocurrió un error en el servidor. Por favor, intente más tarde.';
   }
   if (error.request) {
-    return 'No hay respuesta del servidor';
+    return 'No se pudo conectar con el servidor. Verifique su conexión a internet.';
   }
-  return error.message || 'Error desconocido';
+  return 'Error desconocido. Por favor, contacte al soporte.';
 };
 
 // Validar email

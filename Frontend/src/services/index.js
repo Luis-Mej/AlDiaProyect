@@ -1,6 +1,8 @@
 import api from './api';
 
-// Autenticación
+
+// 🔐 AUTENTICACIÓN
+
 export const authService = {
   registrar: (nombre, email, contrasena) =>
     api.post('/usuarios/registrar', { nombre, email, contrasena }),
@@ -14,14 +16,16 @@ export const authService = {
   reenviarCodigo: (email) =>
     api.post('/usuarios/reenviar-codigo', { email }),
   
-  // Recuperación de contraseña
   solicitarRecuperacion: (email) =>
     api.post('/usuarios/solicitar-recuperacion', { email }),
+  
   resetearContrasena: (email, codigo, nuevaContrasena) =>
     api.post('/usuarios/resetear-contrasena', { email, codigo, nuevaContrasena }),
 };
 
-// Usuarios
+
+// 👤 USUARIOS
+
 export const usuarioService = {
   obtenerTodos: () => api.get('/usuarios'),
   
@@ -36,30 +40,65 @@ export const usuarioService = {
   eliminar: (id) => api.delete(`/usuarios/eliminar/${id}`),
 };
 
-// Servicios de Usuario
+
+// 🟢 SERVICIOS RECURRENTES
+
 export const servicioUsuarioService = {
-  crear: (servicio, cuenta) =>
-    api.post('/mis-servicios', { servicio, cuenta }),
-  
+  crear: (nombre, categoria) =>
+    api.post('/mis-servicios', { nombre, categoria }),
+
   obtenerTodos: () => api.get('/mis-servicios'),
-  
+
   eliminar: (id) => api.delete(`/mis-servicios/${id}`),
 };
 
-// Consultas
+
+// 🔴 GASTOS MENSUALES
+
+export const gastoMensualService = {
+
+  // 🔥 Crear gasto mensual (usuario se obtiene del token)
+  crear: (datos) =>
+    api.post('/gastos', datos),
+
+  // 🔥 Obtener gastos del usuario autenticado
+  obtenerMisGastos: () =>
+    api.get('/gastos/mis-gastos'),
+
+  // 🔥 Marcar gasto como pagado
+  marcarPagado: (id) =>
+    api.patch(`/gastos/${id}/pagar`)
+};
+
+
+// 🔍 CONSULTAS
+
 export const consultasService = {
   consultar: (servicio, cuenta) =>
     api.get('/consultas', { params: { servicio, cuenta } }),
   
-  consultarMisServicios: () => api.get('/consultas/mis-servicios'),
+  consultarMisServicios: () =>
+    api.get('/consultas/mis-servicios'),
 };
 
-// Asistente IA
+
+// 🤖 ASISTENTE IA
+
 export const asistenteService = {
   analizar: () => api.post('/asistente/analizar'),
 };
 
-// Recordatorios
+// servicios para consejos de ahorro (backend en /api/consejos-ahorro)
+export const consejosService = {
+  generar: (recordatorioId) =>
+    api.post('/consejos-ahorro/generar', { recordatorioId }),
+  obtenerAnalisisCompleto: () => api.get('/consejos-ahorro/analisis/completo'),
+  obtenerTodos: () => api.get('/consejos-ahorro')
+};
+
+
+// ⏰ RECORDATORIOS
+
 export const recordatorioService = {
   obtenerTodos: () => api.get('/recordatorios'),
   
@@ -67,9 +106,12 @@ export const recordatorioService = {
   
   crear: (datos) => api.post('/recordatorios', datos),
   
-  actualizar: (id, datos) => api.put(`/recordatorios/${id}`, datos),
+  actualizar: (id, datos) =>
+    api.put(`/recordatorios/${id}`, datos),
   
-  eliminar: (id) => api.delete(`/recordatorios/${id}`),
+  eliminar: (id) =>
+    api.delete(`/recordatorios/${id}`),
   
-  completar: (id) => api.patch(`/recordatorios/${id}/completar`),
+  completar: (id) =>
+    api.patch(`/recordatorios/${id}/completar`),
 };

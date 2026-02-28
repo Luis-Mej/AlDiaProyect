@@ -40,7 +40,6 @@ export const DashboardPage = () => {
       <Navbar />
 
       <div className="dashboard-container">
-        {/* Subscription Status */}
         <div className="subscription-banner">
           <div className="subscription-info">
             <FiStar className="subscription-icon" />
@@ -54,7 +53,7 @@ export const DashboardPage = () => {
           )}
         </div>
 
-        {/* Tab Navigation */}
+        {/* Tabs */}
         <div className="dashboard-tabs">
           <div className="dashboard-tabs-container">
             {tabs.map(({ id, label, icon: Icon }) => (
@@ -70,10 +69,14 @@ export const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Content Area */}
+        {/* Contenido */}
         <div className="dashboard-content">
           {pestaña === 'servicios' && <MisServicios />}
-          {pestaña === 'consultas' && <ConsultasDirectas />}
+
+          {pestaña === 'consultas' && (
+            <ConsultasDirectas irAMisServicios={() => setPestaña('servicios')} />
+          )}
+
           {pestaña === 'asistente' && <AsistenteIA />}
         </div>
       </div>

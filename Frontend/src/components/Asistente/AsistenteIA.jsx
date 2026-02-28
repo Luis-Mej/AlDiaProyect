@@ -31,7 +31,9 @@ export const AsistenteIA = () => {
         <h2 className="asistente-title">
           <FiCpu className="asistente-title-icon" /> Asistente IA
         </h2>
-        <p className="asistente-subtitle">Análisis inteligente de tus servicios registrados</p>
+        <p className="asistente-subtitle">
+          Análisis inteligente de tus servicios registrados
+        </p>
       </div>
 
       {/* Action Button */}
@@ -44,7 +46,7 @@ export const AsistenteIA = () => {
         {loading ? 'Analizando servicios...' : 'Analizar Mis Servicios'}
       </button>
 
-      {/* Error Message */}
+      {/* Error */}
       {error && (
         <div className="asistente-error">
           <div className="asistente-error-icon">⚠️</div>
@@ -52,10 +54,11 @@ export const AsistenteIA = () => {
         </div>
       )}
 
-      {/* Results */}
+      {/* RESULTADOS */}
       {resultado && (
         <div className="asistente-results">
-          {/* Analysis Section */}
+
+          {/* 📊 ANALISIS IA */}
           <div className="analysis-section">
             <h3 className="analysis-title">📊 Análisis de IA</h3>
             <p className="analysis-content">
@@ -63,31 +66,38 @@ export const AsistenteIA = () => {
             </p>
           </div>
 
-          {/* Details Grid */}
-          {resultado.detalles && resultado.detalles.length > 0 && (
+          {/* 📋 DETALLES */}
+          {resultado.detalles?.length > 0 && (
             <div className="details-section">
               <h4 className="details-title">📋 Detalles por Servicio</h4>
+
               <div className="details-grid">
                 {resultado.detalles.map((detalle, idx) => (
                   <div
                     key={idx}
                     className={`detail-card ${detalle.ok ? 'success' : 'error'}`}
                   >
-                    {/* Card Header */}
-                    <div className={`detail-card-header ${detalle.ok ? 'success' : 'error'}`}>
+                    {/* HEADER */}
+                    <div className="detail-card-header success">
                       <h5 className="detail-card-title">
-                        {detalle.servicio === 'cnel' ? '🔌 CNEL' : '💧 Interagua'}
+                        {/* icon and name based on servicio value */}
+                        {detalle.servicio.toLowerCase().includes('cnel') && '🔌 '}
+                        {detalle.servicio.toLowerCase().includes('agua') && '💧 '}
+                        {detalle.servicio.toUpperCase()}
                       </h5>
                     </div>
 
-                    {/* Card Body */}
+                    {/* BODY */}
                     <div className="detail-card-body">
+
                       {detalle.ok ? (
-                        <div>
+                        <>
+
+                          {/* ⭐ PROMEDIO MENSUAL */}
                           {detalle.saldoActual !== null && (
                             <div className="detail-field">
                               <p className="detail-field-label">
-                                Saldo Actual
+                                Promedio mensual estimado
                               </p>
                               <p className="detail-field-value">
                                 {formatCurrency(detalle.saldoActual)}
@@ -95,42 +105,38 @@ export const AsistenteIA = () => {
                             </div>
                           )}
 
+                          {/* ⭐ HISTORIAL SI EXISTE */}
                           {detalle.saldoPasado !== null && (
                             <>
                               <div className="detail-field">
                                 <p className="detail-field-label">
-                                  Saldo Anterior
+                                  Promedio anterior
                                 </p>
                                 <p className="detail-field-value">
                                   {formatCurrency(detalle.saldoPasado)}
                                 </p>
                               </div>
 
-                              <div
-                                className={`detail-field ${
-                                  detalle.variacion > 0
-                                    ? 'warning'
-                                    : 'positive'
-                                }`}
-                              >
+                              <div className="detail-field">
                                 <p className="detail-field-label">
-                                  Variación
+                                  Tendencia
                                 </p>
-                                <p
-                                  className="detail-field-value"
-                                >
-                                  {detalle.variacion > 0 ? '+' : ''}
-                                  {formatCurrency(detalle.variacion)}
+                                <p className="detail-field-value">
+                                  {detalle.variacion > 0
+                                    ? "📈 Aumentando"
+                                    : "📉 Disminuyendo"}
                                 </p>
                               </div>
                             </>
                           )}
-                        </div>
+
+                        </>
                       ) : (
                         <div className="detail-error-message">
                           ⚠️ {detalle.mensaje}
                         </div>
                       )}
+
                     </div>
                   </div>
                 ))}
@@ -138,6 +144,7 @@ export const AsistenteIA = () => {
             </div>
           )}
 
+          {/* SIN SERVICIOS */}
           {(!resultado.detalles || resultado.detalles.length === 0) && (
             <div className="no-services-message">
               <p className="no-services-text">
@@ -148,15 +155,13 @@ export const AsistenteIA = () => {
         </div>
       )}
 
-      {/* Idle State */}
+      {/* IDLE */}
       {!resultado && !loading && (
         <div className="asistente-idle">
           <FiCpu className="asistente-idle-icon" />
-          <p className="asistente-idle-title">
-            Asistente IA Listo
-          </p>
+          <p className="asistente-idle-title">Asistente IA listo</p>
           <p className="asistente-idle-subtitle">
-            Haz clic en el botón de arriba para analizar tus servicios con IA
+            Haz clic arriba para analizar tus servicios
           </p>
         </div>
       )}

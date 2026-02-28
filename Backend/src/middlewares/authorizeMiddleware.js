@@ -1,11 +1,20 @@
 import jwt from "jsonwebtoken";
 import Usuario from "../models/usuarioModel.js";
 
+/* =========================================
+   Helper interno para obtener usuarioId
+========================================= */
+const getUsuarioId = (req) =>
+  req.usuario?.id || req.usuario?.sub || req.usuario?._id;
+
+/* =========================================
+   Verificar Token JWT
+========================================= */
 export const verificarToken = (req, res, next) => {
-  const header = req.header("Authorization");
+  const header = req.headers.authorization; // 🔥 CAMBIO CLAVE
 
   if (!header) {
-    return res.status(401).json({ mensaje: "Token faltante" });
+    return res.status(401).json({ ok: false, mensaje: "Token faltante" });
   }
 
   const token = header.replace("Bearer ", "");
@@ -15,21 +24,51 @@ export const verificarToken = (req, res, next) => {
     req.usuario = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ mensaje: "Token no válido" });
+    return res.status(401).json({ ok: false, mensaje: "Token no válido" });
   }
 };
 
+/* =========================================
+   Verificar Suscripción Premium
+========================================= */
 export const verificarPremium = async (req, res, next) => {
   try {
-    const usuario = await Usuario.findById(req.usuario.id);
+    const usuarioId = req.usuario?.id || req.usuario?.sub;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, mensaje: "Usuario no autenticado" });
+    }
+
+    const usuario = await Usuario.findById(usuarioId);
+
     if (!usuario) {
-      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+      return res.status(404).json({ ok: false, mensaje: "Usuario no encontrado" });
     }
-    if (usuario.suscripcion !== 'premium') {
-      return res.status(403).json({ mensaje: "Esta funcionalidad requiere una suscripción premium" });
+
+    // Si está en premium pero vencido → degradar automáticamente
+    if (
+      usuario.suscripcion === "premium" &&
+      usuario.fechaVencimientoPremium &&
+      new Date() > usuario.fechaVencimientoPremium
+    ) {
+      usuario.suscripcion = "free";
+      usuario.fechaVencimientoPremium = null;
+      await usuario.save();
     }
+
+    if (usuario.suscripcion !== "premium") {
+      return res.status(403).json({
+        ok: false,
+        mensaje: "Esta funcionalidad requiere suscripción premium"
+      });
+    }
+
     next();
+
   } catch (error) {
-    res.status(500).json({ mensaje: "Error del servidor" });
+    return res.status(500).json({ ok: false, mensaje: "Error del servidor" });
   }
 };
+
+// Para compatibilidad con importación default en algunas rutas
+export default verificarToken;

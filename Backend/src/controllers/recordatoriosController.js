@@ -1,192 +1,206 @@
+import mongoose from "mongoose";
 import recordatorioModel from "../models/recordatorioModel.js";
 
-/**
- * GET /recordatorios
- * Obtener todos los recordatorios del usuario autenticado
- */
+/* =====================================================
+   Helper: Obtener usuarioId desde JWT
+===================================================== */
+const getUsuarioId = (req) => {
+  return req.usuario?.id || req.usuario?.sub || req.usuario?._id;
+};
+
+/* =====================================================
+   Helper: Calcular fechaRecordatorio (2 días antes)
+===================================================== */
+const calcularFechaRecordatorio = (fechaPago) => {
+  const fechaPagoDate = new Date(fechaPago);
+  const fechaRecordatorioDate = new Date(fechaPagoDate);
+  fechaRecordatorioDate.setDate(fechaRecordatorioDate.getDate() - 2);
+  return fechaRecordatorioDate;
+};
+
+/* =====================================================
+   GET /recordatorios
+   Obtener todos los recordatorios del usuario
+===================================================== */
 export const obtenerRecordatorios = async (req, res) => {
   try {
-    const usuarioId = req.usuario?.id || req.usuario?.sub || req.usuario?._id;
-    if (!usuarioId) {
-      return res.status(401).json({ error: "Usuario no autenticado" });
-    }
+    const usuarioId = getUsuarioId(req);
+    if (!usuarioId)
+      return res.status(401).json({ ok: false, mensaje: "Usuario no autenticado" });
 
     const recordatorios = await recordatorioModel
       .find({ usuarioId })
       .sort({ fechaRecordatorio: 1 });
 
-    res.json({ ok: true, data: recordatorios });
+    return res.json({ ok: true, data: recordatorios });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ ok: false, mensaje: error.message });
   }
 };
 
-/**
- * GET /recordatorios/:id
- * Obtener un recordatorio específico
- */
+/* =====================================================
+   GET /recordatorios/:id
+===================================================== */
 export const obtenerRecordatorioPorId = async (req, res) => {
   try {
-    const usuarioId = req.usuario?.id || req.usuario?.sub || req.usuario?._id;
+    const usuarioId = getUsuarioId(req);
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({ ok: false, mensaje: "ID inválido" });
 
     const recordatorio = await recordatorioModel.findOne({
       _id: id,
       usuarioId
     });
 
-    if (!recordatorio) {
-      return res.status(404).json({ error: "Recordatorio no encontrado" });
-    }
+    if (!recordatorio)
+      return res.status(404).json({ ok: false, mensaje: "Recordatorio no encontrado" });
 
-    res.json({ ok: true, data: recordatorio });
+    return res.json({ ok: true, data: recordatorio });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ ok: false, mensaje: error.message });
   }
 };
 
-/**
- * POST /recordatorios
- * Crear un nuevo recordatorio
- * Body: { servicio, cuenta, fechaPago, descripcion?, monto?, notas? }
- */
+/* =====================================================
+   POST /recordatorios
+===================================================== */
 export const crearRecordatorio = async (req, res) => {
   try {
-    const usuarioId = req.usuario?.id || req.usuario?.sub || req.usuario?._id;
-    if (!usuarioId) {
-      return res.status(401).json({ error: "Usuario no autenticado" });
-    }
+    const usuarioId = getUsuarioId(req);
+    if (!usuarioId)
+      return res.status(401).json({ ok: false, mensaje: "Usuario no autenticado" });
 
     const { servicio, cuenta, fechaPago, descripcion, monto, notas } = req.body;
 
-    if (!servicio || !cuenta || !fechaPago) {
+    if (!servicio || !cuenta || !fechaPago)
       return res.status(400).json({
-        error: "Campos requeridos: servicio, cuenta, fechaPago"
+        ok: false,
+        mensaje: "Campos requeridos: servicio, cuenta, fechaPago"
       });
-    }
 
-    // Calcular fechaRecordatorio (2 días antes de fechaPago)
     const fechaPagoDate = new Date(fechaPago);
-    const fechaRecordatorioDate = new Date(fechaPagoDate);
-    fechaRecordatorioDate.setDate(fechaRecordatorioDate.getDate() - 2);
+    const fechaRecordatorio = calcularFechaRecordatorio(fechaPagoDate);
 
-    const recordatorio = await recordatorioModel.create({
+    const nuevoRecordatorio = await recordatorioModel.create({
       usuarioId,
-      servicio: servicio.toLowerCase(),
+      servicio: servicio.toLowerCase().trim(),
       cuenta,
       descripcion,
       fechaPago: fechaPagoDate,
-      fechaRecordatorio: fechaRecordatorioDate,
+      fechaRecordatorio,
       monto,
-      notas
+      notas,
+      estado: "pendiente"
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       ok: true,
       mensaje: "Recordatorio creado exitosamente",
-      data: recordatorio
+      data: nuevoRecordatorio
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ ok: false, mensaje: error.message });
   }
 };
 
-/**
- * PUT /recordatorios/:id
- * Actualizar un recordatorio existente
- */
+/* =====================================================
+   PUT /recordatorios/:id
+===================================================== */
 export const actualizarRecordatorio = async (req, res) => {
   try {
-    const usuarioId = req.usuario?.id || req.usuario?.sub || req.usuario?._id;
+    const usuarioId = getUsuarioId(req);
     const { id } = req.params;
-    const actualizaciones = req.body;
+    const actualizaciones = { ...req.body };
 
-    // Verificar que el recordatorio pertenece al usuario
-    const recordatorio = await recordatorioModel.findOne({
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({ ok: false, mensaje: "ID inválido" });
+
+    const recordatorioExistente = await recordatorioModel.findOne({
       _id: id,
       usuarioId
     });
 
-    if (!recordatorio) {
-      return res.status(404).json({ error: "Recordatorio no encontrado" });
-    }
+    if (!recordatorioExistente)
+      return res.status(404).json({ ok: false, mensaje: "Recordatorio no encontrado" });
 
-    // Si se actualiza fechaPago, recalcular fechaRecordatorio
     if (actualizaciones.fechaPago) {
-      const fechaPagoDate = new Date(actualizaciones.fechaPago);
-      const fechaRecordatorioDate = new Date(fechaPagoDate);
-      fechaRecordatorioDate.setDate(fechaRecordatorioDate.getDate() - 2);
-      actualizaciones.fechaRecordatorio = fechaRecordatorioDate;
+      actualizaciones.fechaPago = new Date(actualizaciones.fechaPago);
+      actualizaciones.fechaRecordatorio =
+        calcularFechaRecordatorio(actualizaciones.fechaPago);
     }
 
-    const recordatorioActualizado = await recordatorioModel.findByIdAndUpdate(
+    const actualizado = await recordatorioModel.findByIdAndUpdate(
       id,
       actualizaciones,
       { new: true, runValidators: true }
     );
 
-    res.json({
+    return res.json({
       ok: true,
-      mensaje: "Recordatorio actualizado",
-      data: recordatorioActualizado
+      mensaje: "Recordatorio actualizado correctamente",
+      data: actualizado
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ ok: false, mensaje: error.message });
   }
 };
 
-/**
- * DELETE /recordatorios/:id
- * Eliminar un recordatorio
- */
+/* =====================================================
+   DELETE /recordatorios/:id
+===================================================== */
 export const eliminarRecordatorio = async (req, res) => {
   try {
-    const usuarioId = req.usuario?.id || req.usuario?.sub || req.usuario?._id;
+    const usuarioId = getUsuarioId(req);
     const { id } = req.params;
 
-    const recordatorio = await recordatorioModel.findOneAndDelete({
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({ ok: false, mensaje: "ID inválido" });
+
+    const eliminado = await recordatorioModel.findOneAndDelete({
       _id: id,
       usuarioId
     });
 
-    if (!recordatorio) {
-      return res.status(404).json({ error: "Recordatorio no encontrado" });
-    }
+    if (!eliminado)
+      return res.status(404).json({ ok: false, mensaje: "Recordatorio no encontrado" });
 
-    res.json({
+    return res.json({
       ok: true,
-      mensaje: "Recordatorio eliminado"
+      mensaje: "Recordatorio eliminado correctamente"
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ ok: false, mensaje: error.message });
   }
 };
 
-/**
- * PATCH /recordatorios/:id/completar
- * Marcar un recordatorio como completado
- */
+/* =====================================================
+   PATCH /recordatorios/:id/completar
+===================================================== */
 export const completarRecordatorio = async (req, res) => {
   try {
-    const usuarioId = req.usuario?.id || req.usuario?.sub || req.usuario?._id;
+    const usuarioId = getUsuarioId(req);
     const { id } = req.params;
 
-    const recordatorio = await recordatorioModel.findOneAndUpdate(
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json({ ok: false, mensaje: "ID inválido" });
+
+    const actualizado = await recordatorioModel.findOneAndUpdate(
       { _id: id, usuarioId },
       { estado: "completado" },
       { new: true }
     );
 
-    if (!recordatorio) {
-      return res.status(404).json({ error: "Recordatorio no encontrado" });
-    }
+    if (!actualizado)
+      return res.status(404).json({ ok: false, mensaje: "Recordatorio no encontrado" });
 
-    res.json({
+    return res.json({
       ok: true,
       mensaje: "Recordatorio marcado como completado",
-      data: recordatorio
+      data: actualizado
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ ok: false, mensaje: error.message });
   }
 };

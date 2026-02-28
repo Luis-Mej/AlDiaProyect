@@ -4,9 +4,9 @@
 
 .calendario-container {
   padding: 1rem;
-  background: linear-gradient(to bottom, #f8f9fa, #ffffff);
-  min-height: 100vh;
-  width: 100%;
+  background: var(--background);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   
   @media (min-width: 640px) {
     padding: 1.5rem;
@@ -44,8 +44,8 @@
 }
 
 .calendario-header h1 {
-  color: #1f2937;
-  font-size: 1.5rem;
+  color: var(--primary);
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
   flex: 1;

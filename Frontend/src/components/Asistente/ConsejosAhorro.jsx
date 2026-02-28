@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useConsejosStore } from '../../store';
+import { consejosService } from '../../services';
+import { handleApiError } from '../../utils/helpers';
 import './ConsejosAhorro.css';
 
 export const ConsejosAhorro = () => {
@@ -22,19 +24,12 @@ export const ConsejosAhorro = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('/api/consejos-ahorro/analisis/completo', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (!response.ok) throw new Error('Error cargando análisis');
-      
-      const data = await response.json();
-      setAnalisisCompleto(data.data);
+      const res = await consejosService.obtenerAnalisisCompleto();
+      setAnalisisCompleto(res.data.data);
     } catch (err) {
-      setError(err.message);
-      setStoreError(err.message);
+      const msg = handleApiError(err);
+      setError(msg);
+      setStoreError(msg);
     } finally {
       setLoading(false);
     }

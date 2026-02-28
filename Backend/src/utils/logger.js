@@ -25,4 +25,12 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
+if (process.env.NODE_ENV === 'production') {
+  logger.add(new winston.transports.Http({
+    host: 'log-centralizado.com',
+    path: '/logs',
+    ssl: true,
+  }));
+}
+
 export default logger;

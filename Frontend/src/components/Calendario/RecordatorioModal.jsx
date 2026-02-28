@@ -19,7 +19,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
     categoria: 'servicios_basicos',
     frecuencia: 'mensual',
   });
-  
+
   const [consejos, setConsejos] = useState([]);
   const [mostrarConsejos, setMostrarConsejos] = useState(false);
   const [cargandoConsejos, setCargandoConsejos] = useState(false);
@@ -29,9 +29,11 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
   useEffect(() => {
     if (recordatorio) {
       // Convertir fechas al formato ISO (YYYY-MM-DD)
-      const fechaPago = recordatorio.fechaPago
-        ? new Date(recordatorio.fechaPago).toISOString().split('T')[0]
-        : '';
+      const fechaPago = recordatorio.fechaPago instanceof Date
+        ? recordatorio.fechaPago.toISOString().split('T')[0]
+        : recordatorio.fechaPago
+          ? new Date(recordatorio.fechaPago).toISOString().split('T')[0]
+          : '';
 
       setFormData({
         servicio: recordatorio.servicio || '',
@@ -45,7 +47,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
         categoria: recordatorio.categoria || 'servicios_basicos',
         frecuencia: recordatorio.frecuencia || 'mensual',
       });
-      
+
       // Cargar consejos si existen
       if (recordatorio.consejosAhorro?.length > 0) {
         setConsejos(recordatorio.consejosAhorro);
@@ -95,7 +97,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
       });
 
       if (!response.ok) throw new Error('Error generando consejos');
-      
+
       const data = await response.json();
       setConsejos(data.data.consejos);
       setMostrarConsejos(true);
@@ -150,7 +152,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
 
   const handleDelete = async () => {
     if (!recordatorio?._id) return;
-    
+
     if (!window.confirm('¿Estás seguro de que deseas eliminar este recordatorio?')) {
       return;
     }
@@ -202,7 +204,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
           {/* Sección Básica */}
           <div className="form-section">
             <h3>Información del Pago</h3>
-            
+
             <div className="form-group">
               <label>Servicio *</label>
               <select
@@ -286,7 +288,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
           {/* Sección Notificaciones */}
           <div className="form-section">
             <h3>Configuración de Notificaciones</h3>
-            
+
             <div className="form-row">
               <div className="form-group">
                 <label>Notificar días antes</label>
@@ -334,7 +336,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
           {/* Sección Notas */}
           <div className="form-section">
             <h3>Notas Adicionales</h3>
-            
+
             <div className="form-group">
               <label>Notas (opcional)</label>
               <textarea
@@ -392,6 +394,7 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
         </form>
 
         {/* Sección de Consejos de Ahorro */}
+        {/*
         {recordatorio?._id && (
           <>
             <div className="consejos-toggle">
@@ -434,11 +437,12 @@ const RecordatorioModal = ({ isOpen, recordatorio, onClose, onSave }) => {
             )}
           </>
         )}
+        */}
 
         {/* Info del recordatorio */}
         {recordatorio?._id && (
           <div className="modal-info">
-            <p><strong>Estado:</strong> <span className={`estado-${recordatorio.estado}`}>{recordatorio.estado.toUpperCase()}</span></p>
+            <p><strong>Estado:</strong> <span className={`estado-${recordatorio.estado ? recordatorio.estado.toLowerCase() : 'pendiente'}`}>{recordatorio.estado ? recordatorio.estado.toUpperCase() : 'Pendiente'}</span></p>
             {recordatorio.notificacionEnviada && (
               <p><strong>Notificación:</strong> ✓ Enviada</p>
             )}
