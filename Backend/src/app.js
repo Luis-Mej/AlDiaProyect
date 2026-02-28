@@ -17,6 +17,7 @@ import gastosMensualesRoutes from "./routes/gastosMensualesRoutes.js";
 
 const app = express();
 
+app.set("trust proxy", 1); // Para que funcione correctamente el rate limiter detrás de proxies como Heroku
 // ===============================
 // 🔧 Middlewares Globales
 // ===============================
